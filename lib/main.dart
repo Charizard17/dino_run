@@ -1,10 +1,12 @@
+import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Flame.device.fullScreen();
+  await Flame.device.setLandscape();
   runApp(MyApp());
 }
 
@@ -40,6 +42,18 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
 
     game = FlameGame();
+
+    Future<void> asyncFunc() async {
+      final sprite = await Sprite.load('DinoSprites_mort.gif');
+      var dinoSprite = SpriteComponent(size: Vector2(64, 64), sprite: sprite);
+
+      dinoSprite.x = 100;
+      dinoSprite.y = 100;
+
+      game.add(dinoSprite);
+    }
+
+    asyncFunc();
   }
 
   @override
