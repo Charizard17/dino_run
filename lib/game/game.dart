@@ -1,11 +1,17 @@
+import 'dart:ui';
+
 import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 import 'package:flame/parallax.dart';
 import 'package:flame/sprite.dart';
 
+const double groundHeight = 32;
+const double dinoTopBottomSpacing = 10;
+const int numberOfTilesAlongWidth = 10;
+
 class DinoGame extends FlameGame {
-  SpriteAnimationComponent dino = SpriteAnimationComponent();
+  SpriteAnimationComponent _dino = SpriteAnimationComponent();
 
   @override
   Future<void> onLoad() async {
@@ -21,10 +27,7 @@ class DinoGame extends FlameGame {
     final runAnimation =
         spriteSheet.createAnimation(row: 0, stepTime: 0.1, from: 4, to: 10);
 
-    dino.size = Vector2(80.0, 80.0);
-    dino.x = 100;
-    dino.y = 150;
-    dino.animation = runAnimation;
+    _dino.animation = runAnimation;
 
     final parallaxComponent = await loadParallaxComponent(
       [
@@ -40,6 +43,15 @@ class DinoGame extends FlameGame {
     );
 
     add(parallaxComponent);
-    add(dino);
+    add(_dino);
+  }
+
+  @override
+  void onGameResize(Vector2 size) {
+    super.onGameResize(size);
+
+    _dino.height = _dino.width = size[0] / numberOfTilesAlongWidth;
+    _dino.x = _dino.width;
+    _dino.y = size[1] - groundHeight - _dino.height + dinoTopBottomSpacing;
   }
 }
