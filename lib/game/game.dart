@@ -3,12 +3,14 @@ import 'dart:ui';
 import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
+import 'package:flame/input.dart';
 import 'package:flame/parallax.dart';
 import 'package:flame/sprite.dart';
+import 'package:flutter/material.dart';
 
 import './dino.dart';
 
-class DinoGame extends FlameGame {
+class DinoGame extends FlameGame with TapDetector {
   Dino _dino = Dino();
 
   @override
@@ -29,8 +31,13 @@ class DinoGame extends FlameGame {
     );
 
     add(parallaxComponent);
+
     add(_dino);
   }
 
-
+  @override
+  bool onTapDown(TapDownInfo event) {
+    _dino.jump();
+    return true;
+  }
 }
