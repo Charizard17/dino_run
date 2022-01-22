@@ -13,7 +13,7 @@ import './enemy.dart';
 
 class DinoGame extends FlameGame with TapDetector {
   Dino _dino = Dino();
-  Enemy _enemy = Enemy();
+  final Enemy _enemy = Enemy();
 
   @override
   Future<void> onLoad() async {
