@@ -4,6 +4,8 @@ import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/sprite.dart';
 
+import '../helpers/constants.dart';
+
 class Dino extends SpriteAnimationComponent {
   // dino spritesheet animations
   // 0 - 3 = idle,
@@ -12,12 +14,8 @@ class Dino extends SpriteAnimationComponent {
   // 14 - 16 = hit,
   // 17 - 23 = sprint
 
-  final double groundHeight = 32;
-  final double dinoTopBottomSpacing = 5;
-  final int numberOfTilesAlongWidth = 10;
   double speedY = 0.0;
   double yMax = 0.0;
-  final double GRAVITY = 1000;
 
   late final SpriteAnimation _runAnimation;
   late final SpriteAnimation _hitAnimation;

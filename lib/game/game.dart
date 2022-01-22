@@ -9,9 +9,11 @@ import 'package:flame/sprite.dart';
 import 'package:flutter/material.dart';
 
 import './dino.dart';
+import './enemy.dart';
 
 class DinoGame extends FlameGame with TapDetector {
   Dino _dino = Dino();
+  Enemy _enemy = Enemy();
 
   @override
   Future<void> onLoad() async {
@@ -33,6 +35,7 @@ class DinoGame extends FlameGame with TapDetector {
     add(parallaxComponent);
 
     add(_dino);
+    add(_enemy);
   }
 
   @override
