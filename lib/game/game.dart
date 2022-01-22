@@ -14,6 +14,8 @@ import './enemy.dart';
 class DinoGame extends FlameGame with TapDetector {
   Dino _dino = Dino();
   final Enemy _enemy = Enemy();
+  TextComponent _scoreText = TextComponent();
+  late int score;
 
   @override
   Future<void> onLoad() async {
@@ -36,11 +38,26 @@ class DinoGame extends FlameGame with TapDetector {
 
     add(_dino);
     add(_enemy);
+
+    score = 0;
+    _scoreText = TextComponent(text: score.toString());
+    add(_scoreText);
+
+    _scoreText.x = size[0] / 2;
+    _scoreText.y = 0;
   }
 
   @override
   bool onTapDown(TapDownInfo event) {
     _dino.jump();
     return true;
+  }
+
+  @override
+  void update(double dt) {
+    super.update(dt);
+
+    score += (60 * dt).toInt();
+    _scoreText.text = score.toString();
   }
 }
