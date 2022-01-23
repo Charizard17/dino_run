@@ -16,6 +16,8 @@ class Dino extends SpriteAnimationComponent {
 
   double speedY = 0.0;
   double yMax = 0.0;
+  late Timer _timer;
+  bool _isHit = false;
 
   late final SpriteAnimation _runAnimation;
   late final SpriteAnimation _hitAnimation;
@@ -24,6 +26,10 @@ class Dino extends SpriteAnimationComponent {
   Future<void> onLoad() async {
     super.onLoad();
     _loadAnimations().then((_) => this.animation = _runAnimation);
+
+    _timer = Timer(2, onTick: () {
+      run();
+    });
   }
 
   @override
@@ -40,6 +46,8 @@ class Dino extends SpriteAnimationComponent {
       this.y = this.yMax;
       this.speedY = 0.0;
     }
+
+    _timer.update(dt);
   }
 
   bool isOnGround() {
@@ -51,6 +59,8 @@ class Dino extends SpriteAnimationComponent {
       image: await Flame.images.load('DinoSprites-mort.png'),
       srcSize: Vector2(24.0, 24.0),
     );
+
+    this.anchor = Anchor.center;
 
     _runAnimation =
         spriteSheet.createAnimation(row: 0, stepTime: 0.1, from: 4, to: 10);
@@ -65,16 +75,21 @@ class Dino extends SpriteAnimationComponent {
     this.height = this.width = size[0] / numberOfTilesAlongWidth;
     this.x = this.width;
 
-    this.y = size[1] - groundHeight - this.height + dinoTopBottomSpacing;
+    this.y = size[1] - groundHeight - (this.height / 2) + dinoTopBottomSpacing;
     this.yMax = this.y;
   }
 
   void run() {
+    _isHit = false;
     this.animation = _runAnimation;
   }
 
   void hit() {
-    this.animation = _hitAnimation;
+    if (!_isHit) {
+      this.animation = _hitAnimation;
+      _timer.start();
+      _isHit = true;
+    }
   }
 
   void jump() {

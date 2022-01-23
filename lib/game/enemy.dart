@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:flame/components.dart';
@@ -14,23 +15,25 @@ class EnemyData {
   final double textureWidth;
   final double textureHeight;
   final int spriteCount;
+  final bool canFly;
+  final int speed;
 
   EnemyData({
     required this.imageName,
     required this.textureWidth,
     required this.textureHeight,
     required this.spriteCount,
+    required this.canFly,
+    required this.speed,
   });
 }
 
 class Enemy extends SpriteAnimationComponent {
-  late final SpriteAnimation _walkAnimation;
-  final speed = 200;
   double deviceWidth = 1000;
-  double textureWidth = 50;
-  double textureHeight = 50;
-  late EnemyType _randomEnemyType;
   EnemyData? _enemyData;
+  late EnemyType _randomEnemyType;
+  late final SpriteAnimation _enemyAnimation;
+  static Random _random = Random();
 
   static Map<EnemyType, EnemyData> _enemyDetails = {
     EnemyType.AngryPig: EnemyData(
@@ -38,18 +41,24 @@ class Enemy extends SpriteAnimationComponent {
       spriteCount: 15,
       textureWidth: 36.0,
       textureHeight: 30.0,
+      canFly: false,
+      speed: 250,
     ),
     EnemyType.Bat: EnemyData(
       imageName: '/Bat/Flying.png',
       spriteCount: 7,
       textureWidth: 46.0,
       textureHeight: 30.0,
+      canFly: true,
+      speed: 300,
     ),
     EnemyType.Rino: EnemyData(
       imageName: '/Rino/Run.png',
       spriteCount: 6,
       textureWidth: 52.0,
       textureHeight: 34.0,
+      canFly: false,
+      speed: 350,
     ),
   };
 
@@ -62,7 +71,7 @@ class Enemy extends SpriteAnimationComponent {
   Future<void> onLoad() async {
     super.onLoad();
 
-    _loadAnimations().then((_) => this.animation = _walkAnimation);
+    _loadAnimations().then((_) => this.animation = _enemyAnimation);
   }
 
   Future<void> _loadAnimations() async {
@@ -70,7 +79,10 @@ class Enemy extends SpriteAnimationComponent {
       image: await Flame.images.load(_enemyData!.imageName),
       srcSize: Vector2(_enemyData!.textureWidth, _enemyData!.textureHeight),
     );
-    _walkAnimation = spriteSheet.createAnimation(
+
+    this.anchor = Anchor.center;
+
+    _enemyAnimation = spriteSheet.createAnimation(
         row: 0, stepTime: 0.1, from: 0, to: (_enemyData!.spriteCount - 1));
   }
 
@@ -78,24 +90,26 @@ class Enemy extends SpriteAnimationComponent {
   void onGameResize(Vector2 size) {
     super.onGameResize(size);
 
-    textureWidth = _enemyData!.textureWidth;
-    textureHeight = _enemyData!.textureHeight;
+    deviceWidth = size[0];
 
-    double scaleFactor = (size[0] / numberOfTilesAlongWidth) / textureWidth;
+    double scaleFactor =
+        (size[0] / numberOfTilesAlongWidth) / _enemyData!.textureWidth;
 
-    this.height = textureHeight * scaleFactor;
-    this.width = textureWidth * scaleFactor;
+    this.height = _enemyData!.textureHeight * scaleFactor;
+    this.width = _enemyData!.textureWidth * scaleFactor;
 
     this.x = size[0] + this.width;
-    this.y = size[1] - groundHeight - this.height;
+    this.y = size[1] - groundHeight - (this.height / 2);
 
-    deviceWidth = size[0];
+    if (_enemyData!.canFly && _random.nextBool()) {
+      this.y -= this.height;
+    }
   }
 
   @override
   void update(double dt) {
     super.update(dt);
-    this.x -= speed * dt;
+    this.x -= _enemyData!.speed * dt;
   }
 
   @override
