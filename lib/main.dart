@@ -21,6 +21,7 @@ class MyApp extends StatelessWidget {
       title: 'Dino Run',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        fontFamily: 'Digital7',
       ),
       home: const MyHomePage(),
     );
@@ -45,7 +46,17 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: GameWidget(game: dinoGame),
+      body: GameWidget(
+        game: dinoGame,
+        overlayBuilderMap: {
+          'Hud': (_, DinoGame gameRef) {
+            return dinoGame.PauseOverlay();
+          },
+          'PauseMenu': (_, DinoGame gameRef) {
+            return dinoGame.PauseMenu();
+          },
+        },
+      ),
     );
   }
 }

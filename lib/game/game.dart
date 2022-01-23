@@ -54,6 +54,8 @@ class DinoGame extends FlameGame with TapDetector {
     _scoreText.x = size[0] / 2;
     _scoreText.y = 5;
     add(_scoreText);
+
+    overlays.add('Hud');
   }
 
   @override
@@ -81,5 +83,60 @@ class DinoGame extends FlameGame with TapDetector {
         _dino.hit();
       }
     });
+  }
+
+  Widget PauseOverlay() {
+    return Container(
+      margin: const EdgeInsets.only(left: 20),
+      child: IconButton(
+        icon: Icon(Icons.pause, size: 30, color: Colors.white),
+        onPressed: () {
+          pauseGame();
+        },
+      ),
+    );
+  }
+
+  void pauseGame() {
+    pauseEngine();
+
+    overlays.add('PauseMenu');
+  }
+
+  Widget PauseMenu() {
+    return Center(
+      child: Card(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        color: Colors.black.withOpacity(0.5),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 100.0,
+            vertical: 50.0,
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'Paused',
+                style: TextStyle(fontSize: 30, color: Colors.white),
+              ),
+              SizedBox(height: 10),
+              IconButton(
+                icon: Icon(Icons.play_arrow, size: 30, color: Colors.white),
+                onPressed: () {
+                  resumeGame();
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void resumeGame() {
+    overlays.remove('PauseMenu');
+    resumeEngine();
   }
 }
