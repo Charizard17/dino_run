@@ -1,10 +1,10 @@
 import 'dart:ui';
 
-import 'package:dino_run/game/game.dart';
 import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/sprite.dart';
 
+import './game.dart';
 import '../helpers/constants.dart';
 
 enum EnemyType { AngryPig, Bat, Rino }
@@ -29,6 +29,8 @@ class Enemy extends SpriteAnimationComponent {
   double deviceWidth = 1000;
   double textureWidth = 50;
   double textureHeight = 50;
+  late EnemyType _randomEnemyType;
+  EnemyData? _enemyData;
 
   static Map<EnemyType, EnemyData> _enemyDetails = {
     EnemyType.AngryPig: EnemyData(
@@ -51,6 +53,11 @@ class Enemy extends SpriteAnimationComponent {
     ),
   };
 
+  Enemy(EnemyType randomEnemyType) {
+    _randomEnemyType = randomEnemyType;
+    _enemyData = _enemyDetails[_randomEnemyType];
+  }
+
   @override
   Future<void> onLoad() async {
     super.onLoad();
@@ -60,23 +67,19 @@ class Enemy extends SpriteAnimationComponent {
 
   Future<void> _loadAnimations() async {
     final spriteSheet = SpriteSheet(
-      image: await Flame.images.load(_enemyDetails[EnemyType.Rino]!.imageName),
-      srcSize: Vector2(_enemyDetails[EnemyType.Rino]!.textureWidth,
-          _enemyDetails[EnemyType.Rino]!.textureHeight),
+      image: await Flame.images.load(_enemyData!.imageName),
+      srcSize: Vector2(_enemyData!.textureWidth, _enemyData!.textureHeight),
     );
     _walkAnimation = spriteSheet.createAnimation(
-        row: 0,
-        stepTime: 0.1,
-        from: 0,
-        to: (_enemyDetails[EnemyType.Rino]!.spriteCount - 1));
+        row: 0, stepTime: 0.1, from: 0, to: (_enemyData!.spriteCount - 1));
   }
 
   @override
   void onGameResize(Vector2 size) {
     super.onGameResize(size);
 
-    textureWidth = _enemyDetails[EnemyType.Rino]!.textureWidth;
-    textureHeight = _enemyDetails[EnemyType.Rino]!.textureHeight;
+    textureWidth = _enemyData!.textureWidth;
+    textureHeight = _enemyData!.textureHeight;
 
     double scaleFactor = (size[0] / numberOfTilesAlongWidth) / textureWidth;
 
@@ -93,9 +96,10 @@ class Enemy extends SpriteAnimationComponent {
   void update(double dt) {
     super.update(dt);
     this.x -= speed * dt;
+  }
 
-    if (this.x < -size[0]) {
-      this.x = deviceWidth + size[0];
-    }
+  @override
+  bool destroy() {
+    return (this.x < (-this.width));
   }
 }
