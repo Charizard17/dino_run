@@ -46,7 +46,6 @@ class EnemyManager extends Component with HasGameRef<DinoGame> {
       _spawnLevel = newSpawnLevel;
 
       var newWaitTime = (4 / (1 + (0.1 * _spawnLevel)));
-      print(newWaitTime);
 
       _timer.stop();
       _timer = Timer(4, repeat: true, onTick: () {

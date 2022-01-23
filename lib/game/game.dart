@@ -62,5 +62,14 @@ class DinoGame extends FlameGame with TapDetector {
 
     score += (60 * dt).toInt();
     _scoreText.text = score.toString();
+
+    final List<Enemy> _enemyList = children.whereType<Enemy>().toList();
+
+    _enemyList.forEach((enemy) {
+      if (_dino.distance(enemy) < 25) {
+        print('dino hit an enemy');
+        _dino.hit();
+      }
+    });
   }
 }
