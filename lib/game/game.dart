@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'dart:ui' hide TextStyle;
 
 import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
@@ -43,17 +44,27 @@ class DinoGame extends FlameGame with TapDetector {
     add(_enemyManager);
 
     score = 0;
-    _scoreText = TextComponent(text: score.toString());
-    add(_scoreText);
-
+    final style = TextStyle(
+      fontFamily: 'Digital7',
+      fontSize: 40,
+      color: Colors.white,
+    );
+    final regular = TextPaint(style: style);
+    _scoreText = TextComponent(text: score.toString(), textRenderer: regular);
     _scoreText.x = size[0] / 2;
-    _scoreText.y = 0;
+    _scoreText.y = 5;
+    add(_scoreText);
   }
 
   @override
   bool onTapDown(TapDownInfo event) {
     _dino.jump();
     return true;
+  }
+
+  @override
+  void render(Canvas canvas) {
+    super.render(canvas);
   }
 
   @override
@@ -66,8 +77,7 @@ class DinoGame extends FlameGame with TapDetector {
     final List<Enemy> _enemyList = children.whereType<Enemy>().toList();
 
     _enemyList.forEach((enemy) {
-      if (_dino.distance(enemy) < 25) {
-        print('dino hit an enemy');
+      if (_dino.distance(enemy) < 30) {
         _dino.hit();
       }
     });

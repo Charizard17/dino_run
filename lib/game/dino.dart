@@ -27,7 +27,7 @@ class Dino extends SpriteAnimationComponent {
     super.onLoad();
     _loadAnimations().then((_) => this.animation = _runAnimation);
 
-    _timer = Timer(2, onTick: () {
+    _timer = Timer(1, onTick: () {
       run();
     });
   }
@@ -94,7 +94,7 @@ class Dino extends SpriteAnimationComponent {
 
   void jump() {
     if (isOnGround()) {
-      this.speedY = -600;
+      this.speedY = -500;
     }
   }
 }
