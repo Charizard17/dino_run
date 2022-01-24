@@ -5,7 +5,7 @@ import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/sprite.dart';
 
-import './game.dart';
+import 'dino_game.dart';
 import '../helpers/constants.dart';
 
 enum EnemyType { AngryPig, Bat, Rino }

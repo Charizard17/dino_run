@@ -4,7 +4,7 @@ import 'dart:ui';
 import 'package:flame/components.dart';
 
 import './enemy.dart';
-import './game.dart';
+import 'dino_game.dart';
 
 class EnemyManager extends Component with HasGameRef<DinoGame> {
   Random _random = Random();
