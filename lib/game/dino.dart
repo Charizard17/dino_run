@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/sprite.dart';
+import 'package:flutter/material.dart';
 
 import '../helpers/constants.dart';
 
@@ -19,6 +20,7 @@ class Dino extends SpriteAnimationComponent {
   late Timer _timer;
   bool _isHit = false;
 
+  ValueNotifier<int> life = ValueNotifier(5);
   late final SpriteAnimation _runAnimation;
   late final SpriteAnimation _hitAnimation;
 
@@ -86,9 +88,11 @@ class Dino extends SpriteAnimationComponent {
 
   void hit() {
     if (!_isHit) {
-      this.animation = _hitAnimation;
-      _timer.start();
       _isHit = true;
+      this.animation = _hitAnimation;
+      life.value -= 1;
+
+      _timer.start();
     }
   }
 

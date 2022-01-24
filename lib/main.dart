@@ -50,10 +50,13 @@ class _MyHomePageState extends State<MyHomePage> {
         game: dinoGame,
         overlayBuilderMap: {
           'Hud': (_, DinoGame gameRef) {
-            return dinoGame.PauseOverlay();
+            return dinoGame.buildHud();
           },
           'PauseMenu': (_, DinoGame gameRef) {
-            return dinoGame.PauseMenu();
+            return dinoGame.buildPauseMenu();
+          },
+          'GameOverMenu': (_, DinoGame gameRef) {
+            return dinoGame.buildGameOverMenu();
           },
         },
       ),

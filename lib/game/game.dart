@@ -83,35 +83,100 @@ class DinoGame extends FlameGame with TapDetector {
         _dino.hit();
       }
     });
+
+    if (_dino.life.value <= 0) {
+      gameOver();
+    }
   }
 
-  Widget PauseOverlay() {
-    return Container(
-      margin: const EdgeInsets.only(left: 20),
-      child: IconButton(
-        icon: Icon(Icons.pause, size: 30, color: Colors.white),
-        onPressed: () {
-          pauseGame();
-        },
-      ),
-    );
+  @override
+  void lifecycleStateChange(AppLifecycleState state) {
+    super.lifecycleStateChange(state);
+    switch (state) {
+      case AppLifecycleState.resumed:
+        break;
+      case AppLifecycleState.inactive:
+        this.pauseGame();
+        break;
+      case AppLifecycleState.paused:
+        this.pauseGame();
+        break;
+      case AppLifecycleState.detached:
+        this.pauseGame();
+        break;
+    }
   }
 
   void pauseGame() {
     pauseEngine();
-
     overlays.add('PauseMenu');
+    overlays.remove('Hud');
   }
 
-  Widget PauseMenu() {
+  void resumeGame() {
+    overlays.add('Hud');
+    overlays.remove('PauseMenu');
+    resumeEngine();
+  }
+
+  void gameOver() {
+    pauseEngine();
+    overlays.add('GameOverMenu');
+  }
+
+  void reset() {
+    this.score = 0;
+    _dino.life.value = 5;
+    _enemyManager.reset();
+    _dino.run();
+    children.whereType<Enemy>().forEach((enemy) {
+      this.remove(enemy);
+    });
+  }
+
+  Widget buildHud() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          IconButton(
+            icon: Icon(Icons.pause, size: 30, color: Colors.white),
+            onPressed: () {
+              pauseGame();
+            },
+          ),
+          ValueListenableBuilder(
+            valueListenable: _dino.life,
+            builder: (context, int value, child) {
+              final list = <Widget>[];
+              for (int i = 0; i < 5; ++i) {
+                list.add(
+                  Icon(
+                    (i < value) ? Icons.favorite : Icons.favorite_border,
+                    color: Colors.deepOrangeAccent,
+                  ),
+                );
+              }
+              return Row(
+                children: list,
+              );
+            },
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget buildPauseMenu() {
     return Center(
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         color: Colors.black.withOpacity(0.5),
         child: Padding(
           padding: const EdgeInsets.symmetric(
-            horizontal: 100.0,
-            vertical: 50.0,
+            horizontal: 70.0,
+            vertical: 40.0,
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -123,7 +188,8 @@ class DinoGame extends FlameGame with TapDetector {
               ),
               SizedBox(height: 10),
               IconButton(
-                icon: Icon(Icons.play_arrow, size: 30, color: Colors.white),
+                icon: Icon(Icons.play_arrow,
+                    size: 30, color: Colors.deepOrangeAccent),
                 onPressed: () {
                   resumeGame();
                 },
@@ -135,8 +201,51 @@ class DinoGame extends FlameGame with TapDetector {
     );
   }
 
-  void resumeGame() {
-    overlays.remove('PauseMenu');
-    resumeEngine();
+  Widget buildGameOverMenu() {
+    return Center(
+      child: Card(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        color: Colors.black.withOpacity(0.5),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 70.0,
+            vertical: 40.0,
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'Game Over !',
+                style: TextStyle(fontSize: 30, color: Colors.deepOrangeAccent),
+              ),
+              SizedBox(height: 10),
+              Text(
+                'Final score: $score',
+                style: TextStyle(fontSize: 30, color: Colors.white),
+              ),
+              SizedBox(height: 20),
+              TextButton.icon(
+                icon: Icon(
+                  Icons.replay,
+                  color: Colors.deepOrangeAccent,
+                  size: 30,
+                ),
+                label: Text(
+                  'Play Again',
+                  style:
+                      TextStyle(fontSize: 30, color: Colors.deepOrangeAccent),
+                ),
+                onPressed: () {
+                  reset();
+                  overlays.remove('GameOverMenu');
+                  resumeEngine();
+                },
+              )
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
