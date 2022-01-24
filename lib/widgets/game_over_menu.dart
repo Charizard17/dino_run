@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../screens/main_menu.dart';
+
 class GameOverMenu extends StatelessWidget {
   final Function onRestartPressed;
   final int score;
@@ -27,27 +29,45 @@ class GameOverMenu extends StatelessWidget {
             children: [
               Text(
                 'Game Over',
-                style: TextStyle(fontSize: 30, color: Colors.deepOrangeAccent),
+                style: TextStyle(fontSize: 40, color: Colors.deepOrangeAccent),
               ),
               SizedBox(height: 10),
               Text(
                 'Final score: $score',
-                style: TextStyle(fontSize: 30, color: Colors.white),
+                style: TextStyle(fontSize: 30, color: Colors.deepOrangeAccent),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 15),
               TextButton.icon(
                 icon: Icon(
                   Icons.replay,
-                  color: Colors.deepOrangeAccent,
+                  color: Colors.white,
                   size: 30,
                 ),
                 label: Text(
                   'Play Again',
-                  style:
-                      TextStyle(fontSize: 30, color: Colors.deepOrangeAccent),
+                  style: TextStyle(fontSize: 30, color: Colors.white),
                 ),
                 onPressed: () {
                   onRestartPressed();
+                },
+              ),
+              SizedBox(height: 5),
+              TextButton.icon(
+                icon: Icon(
+                  Icons.menu,
+                  color: Colors.white,
+                  size: 30,
+                ),
+                label: Text(
+                  'Main Menu',
+                  style: TextStyle(fontSize: 30, color: Colors.white),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (ctx) => MainMenu(),
+                    ),
+                  );
                 },
               )
             ],
