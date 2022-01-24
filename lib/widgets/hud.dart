@@ -33,7 +33,6 @@ class HUD extends StatelessWidget {
                     color: Colors.deepOrangeAccent,
                   ),
                 );
-              print(life);
               }
               return Row(
                 children: list,

@@ -111,14 +111,12 @@ class DinoGame extends FlameGame with TapDetector {
     pauseEngine();
     overlays.add('PauseMenu');
     overlays.remove('Hud');
-    print('pause game clicked');
   }
 
   void resumeGame() {
     overlays.add('Hud');
     overlays.remove('PauseMenu');
     resumeEngine();
-    print('resume game clicked');
   }
 
   void gameOver() {
@@ -137,6 +135,5 @@ class DinoGame extends FlameGame with TapDetector {
 
     overlays.remove('GameOverMenu');
     resumeEngine();
-    print('reset clicked');
   }
 }
