@@ -1,8 +1,34 @@
-import 'package:dino_run/screens/game_play.dart';
 import 'package:flutter/material.dart';
 
-class MainMenu extends StatelessWidget {
-  const MainMenu({Key? key}) : super(key: key);
+import './game_play.dart';
+import '../widgets/menu.dart';
+import '../widgets/settings.dart';
+
+class MainMenu extends StatefulWidget {
+  const MainMenu({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  State<MainMenu> createState() => _MainMenuState();
+}
+
+class _MainMenuState extends State<MainMenu> {
+  late CrossFadeState _crossFadeState;
+
+  @override
+  void initState() {
+    super.initState();
+    _crossFadeState = CrossFadeState.showFirst;
+  }
+
+  void showMenu() {
+    _crossFadeState = CrossFadeState.showFirst;
+  }
+
+  void showSettings() {
+    _crossFadeState = CrossFadeState.showSecond;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,41 +53,15 @@ class MainMenu extends StatelessWidget {
                 horizontal: 70,
                 vertical: 50,
               ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    'Dino Run',
-                    style: TextStyle(
-                      fontSize: 75,
-                      color: Theme.of(context).accentColor,
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  ElevatedButton(
-                    child: Padding(
-                      padding: const EdgeInsets.all(5.0),
-                      child: Text(
-                        'Play',
-                        style: TextStyle(
-                          fontSize: 30,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.grey[200],
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                          builder: (ctx) => GamePlay(),
-                        ),
-                      );
-                    },
-                  ),
-                ],
+              child: AnimatedCrossFade(
+                firstChild: Menu(
+                  onSettingsPressed: showSettings,
+                ),
+                secondChild: Settings(
+                  onBackButtonPressed: showMenu,
+                ),
+                crossFadeState: _crossFadeState,
+                duration: Duration(milliseconds: 300),
               ),
             ),
           ),

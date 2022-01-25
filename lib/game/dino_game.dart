@@ -16,6 +16,7 @@ import './enemy.dart';
 class DinoGame extends FlameGame with TapDetector {
   Dino _dino = Dino();
   TextComponent _scoreText = TextComponent();
+  double _elapsedTime = 0.0;
   late int score;
   late EnemyManager _enemyManager;
 
@@ -73,8 +74,12 @@ class DinoGame extends FlameGame with TapDetector {
   void update(double dt) {
     super.update(dt);
 
-    score += (60 * dt).toInt();
-    _scoreText.text = score.toString();
+    _elapsedTime += dt;
+    if (_elapsedTime > (1 / 60)) {
+      _elapsedTime = 0.0;
+      score += 1;
+      _scoreText.text = score.toString();
+    }
 
     final List<Enemy> _enemyList = children.whereType<Enemy>().toList();
 

@@ -26,6 +26,13 @@ class HUD extends StatelessWidget {
             valueListenable: life,
             builder: (context, int value, child) {
               final list = <Widget>[];
+              list.add(Text(
+                '${life.value}',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                ),
+              ));
               for (int i = 0; i < 5; ++i) {
                 list.add(
                   Icon(
