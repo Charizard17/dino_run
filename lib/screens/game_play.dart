@@ -18,10 +18,7 @@ class GamePlay extends StatelessWidget {
         game: dinoGame,
         overlayBuilderMap: {
           'Hud': (_, DinoGame gameRef) {
-            return HUD(
-              onPausePressed: dinoGame.pauseGame,
-              life: _dino.life,
-            );
+            return dinoGame.buildHud();
           },
           'PauseMenu': (_, DinoGame gameRef) {
             return PauseMenu(

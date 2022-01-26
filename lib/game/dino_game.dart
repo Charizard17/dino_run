@@ -141,4 +141,42 @@ class DinoGame extends FlameGame with TapDetector {
     overlays.remove('GameOverMenu');
     resumeEngine();
   }
+
+  //////////////////
+  /// build hud widget removed from game_play,
+  /// because dino life hearts wasn't working correctly
+  /// this is just a solution for this issue
+  Widget buildHud() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          IconButton(
+            icon: Icon(Icons.pause, size: 30, color: Colors.white),
+            onPressed: () {
+              pauseGame();
+            },
+          ),
+          ValueListenableBuilder(
+            valueListenable: _dino.life,
+            builder: (context, int value, child) {
+              final list = <Widget>[];
+              for (int i = 0; i < 5; ++i) {
+                list.add(
+                  Icon(
+                    (i < value) ? Icons.favorite : Icons.favorite_border,
+                    color: Colors.deepOrangeAccent,
+                  ),
+                );
+              }
+              return Row(
+                children: list,
+              );
+            },
+          )
+        ],
+      ),
+    );
+  }
 }
