@@ -3,13 +3,7 @@ import 'package:flutter/material.dart';
 import '../screens/game_play.dart';
 
 class Menu extends StatelessWidget {
-  final Function onSettingsPressed;
-
-  const Menu({
-    Key? key,
-    required this.onSettingsPressed,
-  })  : assert(onSettingsPressed != null),
-        super(key: key);
+  const Menu({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +55,7 @@ class Menu extends StatelessWidget {
               color: Colors.white,
             ),
           ),
-          onPressed: onSettingsPressed(),
+          onPressed: () {},
         )
       ],
     );

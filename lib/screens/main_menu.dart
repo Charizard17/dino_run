@@ -14,21 +14,7 @@ class MainMenu extends StatefulWidget {
 }
 
 class _MainMenuState extends State<MainMenu> {
-  late CrossFadeState _crossFadeState;
-
-  @override
-  void initState() {
-    super.initState();
-    _crossFadeState = CrossFadeState.showFirst;
-  }
-
-  void showMenu() {
-    _crossFadeState = CrossFadeState.showFirst;
-  }
-
-  void showSettings() {
-    _crossFadeState = CrossFadeState.showSecond;
-  }
+  CrossFadeState _crossFadeState = CrossFadeState.showFirst;
 
   @override
   Widget build(BuildContext context) {
@@ -54,12 +40,8 @@ class _MainMenuState extends State<MainMenu> {
                 vertical: 50,
               ),
               child: AnimatedCrossFade(
-                firstChild: Menu(
-                  onSettingsPressed: showSettings,
-                ),
-                secondChild: Settings(
-                  onBackButtonPressed: showMenu,
-                ),
+                firstChild: Menu(),
+                secondChild: Settings(),
                 crossFadeState: _crossFadeState,
                 duration: Duration(milliseconds: 300),
               ),

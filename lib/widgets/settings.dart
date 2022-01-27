@@ -1,15 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../screens/game_play.dart';
-
 class Settings extends StatelessWidget {
-  final Function onBackButtonPressed;
-
-  const Settings({
-    Key? key,
-    required this.onBackButtonPressed,
-  })  : assert(onBackButtonPressed != null),
-        super(key: key);
+  const Settings({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +39,7 @@ class Settings extends StatelessWidget {
             color: Colors.white,
             size: 30,
           ),
-          onPressed: onBackButtonPressed(),
+          onPressed: () {},
         ),
       ],
     );
