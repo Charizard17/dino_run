@@ -22,6 +22,9 @@ class DinoGame extends FlameGame with TapDetector {
   late int score;
   late EnemyManager _enemyManager;
 
+  bool _isGameOver = false;
+  bool _isGamePaused = false;
+
   @override
   Future<void> onLoad() async {
     super.onLoad();
@@ -67,8 +70,12 @@ class DinoGame extends FlameGame with TapDetector {
 
   @override
   bool onTapDown(TapDownInfo event) {
-    _dino.jump();
-    return true;
+    super.onTapDown(event);
+    if (!_isGameOver && !_isGamePaused) {
+      _dino.jump();
+      return true;
+    }
+    return false;
   }
 
   @override
@@ -120,8 +127,13 @@ class DinoGame extends FlameGame with TapDetector {
 
   void pauseGame() {
     pauseEngine();
-    overlays.add('PauseMenu');
-    overlays.remove('Hud');
+
+    if (!_isGameOver) {
+      overlays.add('PauseMenu');
+      overlays.remove('Hud');
+
+      _isGamePaused = true;
+    }
 
     AudioManager.instance.pauseBgm();
   }
@@ -131,12 +143,16 @@ class DinoGame extends FlameGame with TapDetector {
     overlays.remove('PauseMenu');
     resumeEngine();
 
+    _isGamePaused = false;
+
     AudioManager.instance.resumeBgm();
   }
 
   void gameOver() {
     pauseEngine();
     overlays.add('GameOverMenu');
+
+    _isGameOver = true;
 
     AudioManager.instance.pauseBgm();
   }
@@ -151,6 +167,9 @@ class DinoGame extends FlameGame with TapDetector {
     });
 
     overlays.remove('GameOverMenu');
+
+    _isGameOver = false;
+
     resumeEngine();
     AudioManager.instance.pauseBgm();
   }
