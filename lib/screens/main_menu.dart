@@ -1,3 +1,4 @@
+import 'package:dino_run/game/audio_manager.dart';
 import 'package:flutter/material.dart';
 
 import './game_play.dart';
@@ -109,46 +110,63 @@ class _MainMenuState extends State<MainMenu> {
   }
 
   Widget Settings() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text(
-          'Settings',
-          style: TextStyle(
-            fontSize: 50,
-            color: Theme.of(context).accentColor,
+    return Container(
+      width: 400,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            'Settings',
+            style: TextStyle(
+              fontSize: 50,
+              color: Theme.of(context).accentColor,
+            ),
           ),
-        ),
-        SizedBox(height: 20),
-        SwitchListTile(
-          value: true,
-          title: Text(
-            'Sound effects',
-            style: TextStyle(fontSize: 30, color: Colors.white),
+          SizedBox(height: 10),
+          ValueListenableBuilder(
+            valueListenable: AudioManager.instance.listenableSfx,
+            builder: (context, bool isSfxOn, child) {
+              return SwitchListTile(
+                value: isSfxOn,
+                title: Text(
+                  'Sound effects',
+                  style: TextStyle(fontSize: 30, color: Colors.white),
+                ),
+                onChanged: (bool value) {
+                  AudioManager.instance.setSfx(value);
+                },
+              );
+            },
           ),
-          onChanged: (bool value) {},
-        ),
-        SwitchListTile(
-          value: true,
-          title: Text(
-            'Background music',
-            style: TextStyle(fontSize: 30, color: Colors.white),
+          ValueListenableBuilder(
+            valueListenable: AudioManager.instance.listenableBgm,
+            builder: (context, bool isBgmOn, child) {
+              return SwitchListTile(
+                value: isBgmOn,
+                title: Text(
+                  'Background music',
+                  style: TextStyle(fontSize: 30, color: Colors.white),
+                ),
+                onChanged: (bool value) {
+                  AudioManager.instance.setBgm(value);
+                },
+              );
+            },
           ),
-          onChanged: (bool value) {},
-        ),
-        IconButton(
-          icon: Icon(
-            Icons.arrow_back_ios_new_outlined,
-            color: Colors.white,
-            size: 30,
+          IconButton(
+            icon: Icon(
+              Icons.arrow_back_ios_new_outlined,
+              color: Colors.white,
+              size: 30,
+            ),
+            onPressed: () {
+              _crossFadeState = CrossFadeState.showFirst;
+              setState(() {});
+            },
           ),
-          onPressed: () {
-            _crossFadeState = CrossFadeState.showFirst;
-            setState(() {});
-          },
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

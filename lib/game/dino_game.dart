@@ -7,9 +7,11 @@ import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 import 'package:flame/parallax.dart';
 import 'package:flame/sprite.dart';
+import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart';
 
 import './dino.dart';
+import './audio_manager.dart';
 import './enemy_manager.dart';
 import './enemy.dart';
 
@@ -23,6 +25,8 @@ class DinoGame extends FlameGame with TapDetector {
   @override
   Future<void> onLoad() async {
     super.onLoad();
+
+    FlameAudio.bgm.stop();
 
     final parallaxComponent = await loadParallaxComponent(
       [
@@ -57,6 +61,8 @@ class DinoGame extends FlameGame with TapDetector {
     add(_scoreText);
 
     overlays.add('Hud');
+
+    AudioManager.instance.startBgm('knight_online_soundtrack.mp3');
   }
 
   @override
@@ -116,17 +122,23 @@ class DinoGame extends FlameGame with TapDetector {
     pauseEngine();
     overlays.add('PauseMenu');
     overlays.remove('Hud');
+
+    AudioManager.instance.pauseBgm();
   }
 
   void resumeGame() {
     overlays.add('Hud');
     overlays.remove('PauseMenu');
     resumeEngine();
+
+    AudioManager.instance.resumeBgm();
   }
 
   void gameOver() {
     pauseEngine();
     overlays.add('GameOverMenu');
+
+    AudioManager.instance.pauseBgm();
   }
 
   void reset() {
@@ -140,6 +152,13 @@ class DinoGame extends FlameGame with TapDetector {
 
     overlays.remove('GameOverMenu');
     resumeEngine();
+    AudioManager.instance.pauseBgm();
+  }
+
+  @override
+  void onDetach() {
+    super.onDetach();
+    AudioManager.instance.stopBgm();
   }
 
   //////////////////
